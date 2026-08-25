@@ -22,6 +22,17 @@ export default function MatchPage() {
 
   useEffect(() => {
     setName(sessionStorage.getItem("projectmatch:name"));
+
+    const storedResult = sessionStorage.getItem("projectmatch:result");
+    if (storedResult) {
+      try {
+        setResult(JSON.parse(storedResult) as MatchResponse);
+        setLastDescription(sessionStorage.getItem("projectmatch:lastDescription") ?? "");
+        setStatus("success");
+      } catch {
+        sessionStorage.removeItem("projectmatch:result");
+      }
+    }
   }, []);
 
   async function handleSubmit(description: string) {
@@ -53,6 +64,8 @@ export default function MatchPage() {
 
       setResult(data as MatchResponse);
       setStatus("success");
+      sessionStorage.setItem("projectmatch:result", JSON.stringify(data));
+      sessionStorage.setItem("projectmatch:lastDescription", description);
     } catch {
       const elapsed = Date.now() - started;
       if (elapsed < MIN_LOADING_MS) {
@@ -68,6 +81,8 @@ export default function MatchPage() {
     setResult(null);
     setError(null);
     setLastDescription("");
+    sessionStorage.removeItem("projectmatch:result");
+    sessionStorage.removeItem("projectmatch:lastDescription");
   }
 
   function handleRetry() {
