@@ -24,6 +24,15 @@ export default function TeamResults({
 
   const visibleTeam = selectedRole ? result.team.filter((m) => m.role === selectedRole) : result.team;
 
+  // Best-match highlight is based on the true top score across the whole
+  // (unfiltered) team, so it stays put regardless of which role filter is
+  // active — ties for first all get highlighted rather than an arbitrary one.
+  const bestIds = useMemo(() => {
+    if (result.team.length < 2) return new Set<string>();
+    const topScore = Math.max(...result.team.map((m) => m.matchScore));
+    return new Set(result.team.filter((m) => m.matchScore === topScore).map((m) => m.id));
+  }, [result.team]);
+
   return (
     <div className="w-full max-w-5xl">
       {result.mode === "fallback" && (
@@ -117,7 +126,7 @@ export default function TeamResults({
         className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         {visibleTeam.map((member, i) => (
-          <TeamCard key={member.id} member={member} index={i} />
+          <TeamCard key={member.id} member={member} index={i} isBestMatch={bestIds.has(member.id)} />
         ))}
       </motion.div>
 

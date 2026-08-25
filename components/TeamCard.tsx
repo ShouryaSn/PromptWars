@@ -19,16 +19,37 @@ const cardVariants = {
   show: { opacity: 1, y: 0, scale: 1 },
 };
 
-export default function TeamCard({ member, index }: { member: TeamMember; index: number }) {
+export default function TeamCard({
+  member,
+  index,
+  isBestMatch = false,
+}: {
+  member: TeamMember;
+  index: number;
+  isBestMatch?: boolean;
+}) {
   const [imgFailed, setImgFailed] = useState(false);
 
   return (
     <motion.article
       variants={cardVariants}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(20,23,26,0.15)" }}
-      className="group flex flex-col rounded-2xl border border-border bg-surface p-5 shadow-md shadow-black/[0.03] transition-colors hover:border-accent/40"
+      whileHover={{
+        y: -6,
+        boxShadow: isBestMatch ? "0 20px 40px -12px rgba(217,119,6,0.25)" : "0 20px 40px -12px rgba(20,23,26,0.15)",
+      }}
+      className={`group relative flex flex-col rounded-2xl border p-5 shadow-md transition-colors ${
+        isBestMatch
+          ? "border-amber-400 bg-surface shadow-amber-200/40 ring-1 ring-amber-300"
+          : "border-border bg-surface shadow-black/[0.03] hover:border-accent/40"
+      }`}
     >
+      {isBestMatch && (
+        <span className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-amber-400 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-950 shadow-sm">
+          ⭐ Best match
+        </span>
+      )}
+
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-accent-light ring-2 ring-transparent transition-all duration-300 group-hover:ring-accent/40">
