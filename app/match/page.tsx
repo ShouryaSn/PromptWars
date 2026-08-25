@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import BackgroundGlow from "@/components/BackgroundGlow";
 import ProjectForm from "@/components/ProjectForm";
 import LoadingSequence from "@/components/LoadingSequence";
 import TeamResults from "@/components/TeamResults";
@@ -95,8 +94,6 @@ export default function MatchPage() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center px-6 py-16">
-      <BackgroundGlow />
-
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}

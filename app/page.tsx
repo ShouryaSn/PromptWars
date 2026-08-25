@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BackgroundGlow from "@/components/BackgroundGlow";
 import LoginForm from "@/components/LoginForm";
 import AvatarMarquee from "@/components/AvatarMarquee";
 import HowItWorks from "@/components/HowItWorks";
@@ -10,8 +9,6 @@ import StatsSection from "@/components/StatsSection";
 export default function WelcomePage() {
   return (
     <main className="relative flex flex-col items-center px-6">
-      <BackgroundGlow />
-
       <section className="flex min-h-[calc(100vh-4rem)] w-full flex-col items-center justify-center py-16">
         <motion.div
           initial={{ opacity: 0, y: -12 }}

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import BackgroundGlow from "@/components/BackgroundGlow";
 import { candidates } from "@/lib/candidates";
 
 function initials(name: string) {
@@ -23,7 +22,6 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
   if (!candidate) {
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-16">
-        <BackgroundGlow />
         <p className="text-lg font-semibold text-ink">Candidate not found.</p>
         <Link
           href="/match"
@@ -47,8 +45,6 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
 
   return (
     <main className="relative flex min-h-screen flex-col items-center px-6 py-12">
-      <BackgroundGlow />
-
       <div className="w-full max-w-3xl">
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
           <Link
