@@ -18,6 +18,10 @@ export type MatchResponse = {
   projectSummary: string;
   teamSummary: string;
   team: TeamMember[];
+  /** "ai" = live Gemini result. "fallback" = local keyword-overlap match, used when the AI call failed. */
+  mode: "ai" | "fallback";
+  /** Human-readable reason shown in the UI when mode is "fallback". */
+  fallbackNote?: string;
 };
 
 export type MatchError = {

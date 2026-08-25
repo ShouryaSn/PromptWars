@@ -26,6 +26,22 @@ export default function TeamResults({
 
   return (
     <div className="w-full max-w-5xl">
+      {result.mode === "fallback" && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="mb-4 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-left"
+        >
+          <span className="mt-0.5 text-sm">⚡</span>
+          <p className="text-xs leading-relaxed text-amber-800">
+            <span className="font-semibold">Offline demo match.</span>{" "}
+            {result.fallbackNote ??
+              "Live AI matching wasn't available, so this team was picked locally by skill/keyword overlap instead."}
+          </p>
+        </motion.div>
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
