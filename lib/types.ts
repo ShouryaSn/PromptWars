@@ -7,6 +7,8 @@ export type TeamMember = {
   experience: string;
   skills: string[];
   matchedSkills: string[];
+  /** false when matchedSkills is just a generic sample of this person's skills (no real overlap found), not an actual match. */
+  skillsMatched: boolean;
   matchScore: number;
   rationale: string;
   avatarUrl: string;

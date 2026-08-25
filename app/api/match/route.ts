@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
           experience: candidate.experience,
           skills: candidate.skills,
           matchedSkills: matchedSkills.length > 0 ? matchedSkills : candidate.skills.slice(0, 3),
+          skillsMatched: matchedSkills.length > 0,
           matchScore: pick.matchScore,
           rationale: pick.rationale,
           avatarUrl: candidate.avatarUrl,

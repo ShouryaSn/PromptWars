@@ -61,15 +61,27 @@ export default function TeamCard({ member, index }: { member: TeamMember; index:
 
       <p className="mt-4 text-sm leading-relaxed text-muted">{member.rationale}</p>
 
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {member.matchedSkills.slice(0, 5).map((skill) => (
-          <span
-            key={skill}
-            className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-ink transition-colors group-hover:border-accent/30 group-hover:bg-accent-light group-hover:text-accent-dark"
-          >
-            {skill}
-          </span>
-        ))}
+      {!member.skillsMatched && (
+        <p className="mt-4 text-[10px] uppercase tracking-wide text-muted/60">General skills — no direct match found</p>
+      )}
+      <div className={`flex flex-wrap gap-1.5 ${member.skillsMatched ? "mt-4" : "mt-1.5"}`}>
+        {member.matchedSkills.slice(0, 5).map((skill) =>
+          member.skillsMatched ? (
+            <span
+              key={skill}
+              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-ink transition-colors group-hover:border-accent/30 group-hover:bg-accent-light group-hover:text-accent-dark"
+            >
+              {skill}
+            </span>
+          ) : (
+            <span
+              key={skill}
+              className="rounded-full border border-dashed border-border/70 px-2.5 py-1 text-xs font-medium text-muted/70"
+            >
+              {skill}
+            </span>
+          )
+        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs text-muted/80">

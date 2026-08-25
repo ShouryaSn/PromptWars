@@ -112,6 +112,7 @@ export function heuristicMatch(description: string, candidates: Candidate[]): Ma
       experience: candidate.experience,
       skills: candidate.skills,
       matchedSkills: shownSkills,
+      skillsMatched: skillMatches.length > 0,
       matchScore: score,
       rationale,
       avatarUrl: candidate.avatarUrl,
