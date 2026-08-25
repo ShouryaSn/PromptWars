@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import BackgroundGlow from "@/components/BackgroundGlow";
 import LoginForm from "@/components/LoginForm";
+import AvatarMarquee from "@/components/AvatarMarquee";
 import HowItWorks from "@/components/HowItWorks";
 import StatsSection from "@/components/StatsSection";
 
@@ -36,6 +37,7 @@ export default function WelcomePage() {
         <LoginForm />
       </section>
 
+      <AvatarMarquee />
       <HowItWorks />
       <StatsSection />
 
