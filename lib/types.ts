@@ -9,6 +9,7 @@ export type TeamMember = {
   matchedSkills: string[];
   matchScore: number;
   rationale: string;
+  avatarUrl: string;
 };
 
 export type MatchResponse = {

@@ -7,6 +7,12 @@ export type Candidate = {
   availability: string;
   experience: "Junior" | "Mid" | "Senior" | "Lead";
   bio: string;
+  avatarUrl: string;
+  location: string;
+  email: string;
+  phone: string;
+  linkedinHandle: string;
+  githubHandle?: string;
 };
 
 export const candidates: Candidate[] = [
@@ -19,6 +25,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Senior",
     bio: "Ships end-to-end features fast and cares deeply about DX.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/65.jpg",
+    location: "Austin, TX",
+    email: "maya.chen@projectmatch.dev",
+    phone: "+1 (555) 018-2231",
+    linkedinHandle: "mayachen",
+    githubHandle: "mchen-dev",
   },
   {
     id: "c02",
@@ -29,6 +41,12 @@ export const candidates: Candidate[] = [
     availability: "20hrs/wk",
     experience: "Mid",
     bio: "Turns fuzzy research ideas into shippable model pipelines.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+    location: "Mexico City, MX",
+    email: "diego.ramirez@projectmatch.dev",
+    phone: "+1 (555) 018-4471",
+    linkedinHandle: "diegoramirez",
+    githubHandle: "dramirez-ml",
   },
   {
     id: "c03",
@@ -39,6 +57,11 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Senior",
     bio: "Obsesses over the small interactions that make products feel alive.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg",
+    location: "Bengaluru, IN",
+    email: "priya.sharma@projectmatch.dev",
+    phone: "+1 (555) 018-7723",
+    linkedinHandle: "priyasharma",
   },
   {
     id: "c04",
@@ -49,6 +72,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Lead",
     bio: "Designs systems that stay boring under 10x load.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/12.jpg",
+    location: "Seattle, WA",
+    email: "jordan.lee@projectmatch.dev",
+    phone: "+1 (555) 018-9012",
+    linkedinHandle: "jordanlee",
+    githubHandle: "jlee-systems",
   },
   {
     id: "c05",
@@ -59,6 +88,11 @@ export const candidates: Candidate[] = [
     availability: "10hrs/wk",
     experience: "Mid",
     bio: "Finds the channel nobody else was looking at.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/21.jpg",
+    location: "Lagos, NG",
+    email: "amara.okafor@projectmatch.dev",
+    phone: "+1 (555) 018-3345",
+    linkedinHandle: "amaraokafor",
   },
   {
     id: "c06",
@@ -69,6 +103,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Senior",
     bio: "Native-first mindset, ships polished mobile experiences.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/54.jpg",
+    location: "Tokyo, JP",
+    email: "ken.watanabe@projectmatch.dev",
+    phone: "+1 (555) 018-5589",
+    linkedinHandle: "kenwatanabe",
+    githubHandle: "kwatanabe-mobile",
   },
   {
     id: "c07",
@@ -79,6 +119,12 @@ export const candidates: Candidate[] = [
     availability: "20hrs/wk",
     experience: "Mid",
     bio: "Turns messy data into decisions people actually trust.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/33.jpg",
+    location: "Warsaw, PL",
+    email: "sofia.petrova@projectmatch.dev",
+    phone: "+1 (555) 018-6612",
+    linkedinHandle: "sofiapetrova",
+    githubHandle: "spetrova-data",
   },
   {
     id: "c08",
@@ -89,6 +135,11 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Senior",
     bio: "Cuts scope ruthlessly to protect what actually matters.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/76.jpg",
+    location: "Chicago, IL",
+    email: "marcus.bell@projectmatch.dev",
+    phone: "+1 (555) 018-1147",
+    linkedinHandle: "marcusbell",
   },
   {
     id: "c09",
@@ -99,6 +150,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Mid",
     bio: "Bridges design and code — pixel-perfect and buttery smooth.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/12.jpg",
+    location: "Krakow, PL",
+    email: "nina.kowalski@projectmatch.dev",
+    phone: "+1 (555) 018-2298",
+    linkedinHandle: "ninakowalski",
+    githubHandle: "nkowalski-fe",
   },
   {
     id: "c10",
@@ -109,6 +166,12 @@ export const candidates: Candidate[] = [
     availability: "20hrs/wk",
     experience: "Senior",
     bio: "Makes deploys boring and incidents rare.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/41.jpg",
+    location: "Pune, IN",
+    email: "ravi.menon@projectmatch.dev",
+    phone: "+1 (555) 018-8834",
+    linkedinHandle: "ravimenon",
+    githubHandle: "rmenon-ops",
   },
   {
     id: "c11",
@@ -119,6 +182,11 @@ export const candidates: Candidate[] = [
     availability: "10hrs/wk",
     experience: "Mid",
     bio: "Gets to the real problem before anyone writes a line of code.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/50.jpg",
+    location: "Madrid, ES",
+    email: "elena.vasquez@projectmatch.dev",
+    phone: "+1 (555) 018-4456",
+    linkedinHandle: "elenavasquez",
   },
   {
     id: "c12",
@@ -129,6 +197,12 @@ export const candidates: Candidate[] = [
     availability: "10hrs/wk",
     experience: "Senior",
     bio: "Thinks like an attacker so the team doesn't have to.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/23.jpg",
+    location: "Berlin, DE",
+    email: "tom.fischer@projectmatch.dev",
+    phone: "+1 (555) 018-9967",
+    linkedinHandle: "tomfischer",
+    githubHandle: "tfischer-sec",
   },
   {
     id: "c13",
@@ -139,6 +213,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Mid",
     bio: "Builds worlds people don't want to leave.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/26.jpg",
+    location: "Osaka, JP",
+    email: "yuki.tanaka@projectmatch.dev",
+    phone: "+1 (555) 018-3391",
+    linkedinHandle: "yukitanaka",
+    githubHandle: "ytanaka-game",
   },
   {
     id: "c14",
@@ -149,6 +229,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Senior",
     bio: "Gets models running fast on hardware that shouldn't be able to run them.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/79.jpg",
+    location: "Seoul, KR",
+    email: "grace.kim@projectmatch.dev",
+    phone: "+1 (555) 018-6675",
+    linkedinHandle: "gracekim",
+    githubHandle: "gkim-cv",
   },
   {
     id: "c15",
@@ -159,6 +245,12 @@ export const candidates: Candidate[] = [
     availability: "full-time",
     experience: "Lead",
     bio: "Thrives in ambiguity, ships MVPs in days not weeks.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/8.jpg",
+    location: "Dublin, IE",
+    email: "liam.obrien@projectmatch.dev",
+    phone: "+1 (555) 018-7789",
+    linkedinHandle: "liamobrien",
+    githubHandle: "lobrien-eng",
   },
   {
     id: "c16",
@@ -169,6 +261,12 @@ export const candidates: Candidate[] = [
     availability: "20hrs/wk",
     experience: "Mid",
     bio: "Builds pipelines that don't page anyone at 3am.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/56.jpg",
+    location: "Dubai, AE",
+    email: "fatima.alsayed@projectmatch.dev",
+    phone: "+1 (555) 018-2214",
+    linkedinHandle: "fatimaalsayed",
+    githubHandle: "falsayed-data",
   },
   {
     id: "c17",
@@ -179,6 +277,11 @@ export const candidates: Candidate[] = [
     availability: "10hrs/wk",
     experience: "Mid",
     bio: "Gives products a personality worth remembering.",
+    avatarUrl: "https://randomuser.me/api/portraits/men/61.jpg",
+    location: "Stockholm, SE",
+    email: "oscar.lindqvist@projectmatch.dev",
+    phone: "+1 (555) 018-5523",
+    linkedinHandle: "oscarlindqvist",
   },
   {
     id: "c18",
@@ -189,5 +292,10 @@ export const candidates: Candidate[] = [
     availability: "20hrs/wk",
     experience: "Junior",
     bio: "Turns first-time users into your loudest advocates.",
+    avatarUrl: "https://randomuser.me/api/portraits/women/9.jpg",
+    location: "Toronto, CA",
+    email: "hannah.weiss@projectmatch.dev",
+    phone: "+1 (555) 018-8856",
+    linkedinHandle: "hannahweiss",
   },
 ];

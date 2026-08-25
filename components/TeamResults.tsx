@@ -24,11 +24,11 @@ export default function TeamResults({
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="mb-8 rounded-2xl border border-accent/30 bg-accent/10 px-5 py-4 text-center"
+        className="mb-8 rounded-2xl border border-accent/30 bg-accent-light px-5 py-4 text-center"
       >
-        <p className="text-sm font-medium text-white/90">{result.teamSummary}</p>
+        <p className="text-sm font-medium text-ink">{result.teamSummary}</p>
         {result.requiredRoles.length > 0 && (
-          <p className="mt-2 text-xs text-white/50">
+          <p className="mt-2 text-xs text-muted">
             Roles matched: {result.requiredRoles.join(" · ")}
           </p>
         )}
@@ -53,7 +53,7 @@ export default function TeamResults({
       >
         <button
           onClick={onReset}
-          className="focus-ring rounded-xl border border-border bg-surface/80 px-6 py-3 text-sm font-medium text-white/70 transition-colors hover:border-accent/50 hover:text-white"
+          className="focus-ring rounded-xl border border-border bg-surface px-6 py-3 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:text-ink"
         >
           Try another project
         </button>

@@ -8,13 +8,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0f",
-        surface: "#13131c",
-        border: "#232333",
+        background: "#F7F8F7",
+        surface: "#FFFFFF",
+        border: "#E4E5E7",
+        ink: "#14171A",
+        muted: "#5E6D6F",
         accent: {
-          DEFAULT: "#7c5cff",
-          light: "#9b82ff",
-          dark: "#5f3dfa",
+          DEFAULT: "#14A800",
+          dark: "#0D7A00",
+          light: "#E9F7E9",
         },
       },
       fontFamily: {
@@ -22,7 +24,7 @@ const config: Config = {
       },
       backgroundImage: {
         "grid-fade":
-          "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,92,255,0.25), transparent)",
+          "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20,168,0,0.12), transparent)",
       },
       keyframes: {
         "pulse-slow": {

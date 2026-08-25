@@ -89,15 +89,26 @@ beforehand or budget your practice runs accordingly.
 
 ```
 app/
-  page.tsx              welcome / mock sign-in
-  match/page.tsx         the actual product (form → loading → results state machine)
-  api/match/route.ts     server route, calls Gemini
+  page.tsx                welcome / mock sign-in
+  match/page.tsx          the actual product (form → loading → results state machine)
+  candidate/[id]/page.tsx  mock candidate profile page (bio, skills, fake contact info)
+  api/match/route.ts      server route, calls Gemini
   layout.tsx, template.tsx, globals.css
 components/
-  LoginForm.tsx, ProjectForm.tsx, LoadingSequence.tsx,
+  Navbar.tsx, LoginForm.tsx, ProjectForm.tsx, LoadingSequence.tsx,
   TeamResults.tsx, TeamCard.tsx, ErrorState.tsx, BackgroundGlow.tsx
 lib/
-  candidates.ts          mock candidate pool
+  candidates.ts          mock candidate pool (incl. avatarUrl + mock contact info)
   gemini.ts               Gemini calls + schemas
   types.ts                shared response types
 ```
+
+## Design
+
+The UI follows an Upwork-inspired visual language: a light background, a green
+accent (`#14A800`), a sticky top navbar, and clean bordered cards — while
+keeping the existing product flow untouched. Mock candidates have real-looking
+(but fake) headshots pulled from `randomuser.me`'s placeholder portrait
+service, and each `TeamCard` in the results grid has a "View profile" button
+that opens `/candidate/[id]`, a full mock profile page with bio, skills, and
+made-up contact info (email/phone/social handles — none of it is real).

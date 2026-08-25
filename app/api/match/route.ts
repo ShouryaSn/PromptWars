@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
           matchedSkills: matchedSkills.length > 0 ? matchedSkills : candidate.skills.slice(0, 3),
           matchScore: pick.matchScore,
           rationale: pick.rationale,
+          avatarUrl: candidate.avatarUrl,
         };
       })
       .filter((t): t is NonNullable<typeof t> => t !== null)

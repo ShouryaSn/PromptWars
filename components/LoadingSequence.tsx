@@ -42,7 +42,7 @@ export default function LoadingSequence() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="text-sm font-medium text-white/70"
+            className="text-sm font-medium text-muted"
           >
             {STEPS[stepIndex]}
           </motion.p>
@@ -54,7 +54,7 @@ export default function LoadingSequence() {
           <div
             key={i}
             className={`h-1 w-6 rounded-full transition-colors duration-300 ${
-              i <= stepIndex ? "bg-accent" : "bg-white/10"
+              i <= stepIndex ? "bg-accent" : "bg-border"
             }`}
           />
         ))}

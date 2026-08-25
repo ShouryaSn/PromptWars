@@ -44,14 +44,14 @@ export default function ProjectForm({
         disabled={disabled}
         rows={6}
         placeholder={`What are you building? e.g.\n\n"${EXAMPLE}"`}
-        className="focus-ring w-full resize-none rounded-2xl border border-border bg-surface/80 p-5 text-base text-white placeholder:text-white/30 shadow-xl shadow-black/30 backdrop-blur transition-colors focus:border-accent disabled:opacity-50"
+        className="focus-ring w-full resize-none rounded-2xl border border-border bg-surface p-5 text-base text-ink placeholder:text-muted/60 shadow-xl shadow-black/[0.04] transition-colors focus:border-accent disabled:opacity-50"
       />
 
       <div className="mt-2 flex min-h-[1.25rem] items-center justify-between px-1">
-        <p className="text-xs text-red-400">
+        <p className="text-xs text-red-600">
           {touched && tooShort ? "Give a bit more detail (20+ characters)." : ""}
         </p>
-        <p className="text-xs text-white/30">{value.trim().length} chars</p>
+        <p className="text-xs text-muted/70">{value.trim().length} chars</p>
       </div>
 
       <motion.button
@@ -59,7 +59,7 @@ export default function ProjectForm({
         disabled={disabled}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="focus-ring mt-3 w-full rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        className="focus-ring mt-3 w-full rounded-xl bg-accent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
       >
         Build my team
       </motion.button>

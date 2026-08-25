@@ -88,11 +88,11 @@ export default function MatchPage() {
         transition={{ duration: 0.4 }}
         className="mb-10 flex flex-col items-center text-center"
       >
-        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3 py-1 text-xs font-medium text-white/60">
+        <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-accent-light px-3 py-1 text-xs font-semibold text-accent-dark">
           <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-slow" />
           {name ? `Welcome, ${name}` : "Welcome"}
         </span>
-        <h1 className="max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+        <h1 className="max-w-xl text-3xl font-bold tracking-tight text-ink sm:text-4xl">
           Describe your project. Meet your dream team.
         </h1>
       </motion.div>
