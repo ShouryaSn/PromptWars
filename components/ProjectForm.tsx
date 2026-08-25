@@ -38,7 +38,7 @@ export default function ProjectForm({
     onSubmit(value.trim());
   }
 
-  function useExample(text: string) {
+  function applyExample(text: string) {
     setValue(text);
     setTouched(false);
     textareaRef.current?.focus();
@@ -58,7 +58,7 @@ export default function ProjectForm({
           <button
             key={ex.label}
             type="button"
-            onClick={() => useExample(ex.text)}
+            onClick={() => applyExample(ex.text)}
             disabled={disabled}
             className="focus-ring rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-accent-dark disabled:cursor-not-allowed disabled:opacity-50"
           >
