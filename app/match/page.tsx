@@ -7,6 +7,7 @@ import LoadingSequence from "@/components/LoadingSequence";
 import TeamResults from "@/components/TeamResults";
 import ErrorState from "@/components/ErrorState";
 import { MatchResponse } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -17,15 +18,21 @@ export default function MatchPage() {
   const [status, setStatus] = useState<Status>("idle");
   const [result, setResult] = useState<MatchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastProjectName, setLastProjectName] = useState<string>("");
   const [lastDescription, setLastDescription] = useState<string>("");
 
   useEffect(() => {
-    setName(sessionStorage.getItem("projectmatch:name"));
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      const fullName = data.user?.user_metadata?.full_name as string | undefined;
+      setName(fullName ?? data.user?.email?.split("@")[0] ?? null);
+    });
 
     const storedResult = sessionStorage.getItem("projectmatch:result");
     if (storedResult) {
       try {
         setResult(JSON.parse(storedResult) as MatchResponse);
+        setLastProjectName(sessionStorage.getItem("projectmatch:lastProjectName") ?? "");
         setLastDescription(sessionStorage.getItem("projectmatch:lastDescription") ?? "");
         setStatus("success");
       } catch {
@@ -34,7 +41,8 @@ export default function MatchPage() {
     }
   }, []);
 
-  async function handleSubmit(description: string) {
+  async function handleSubmit(projectName: string, description: string) {
+    setLastProjectName(projectName);
     setLastDescription(description);
     setStatus("loading");
     setError(null);
@@ -45,7 +53,7 @@ export default function MatchPage() {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description }),
+        body: JSON.stringify({ projectName, description }),
       });
 
       const data = await res.json();
@@ -64,6 +72,7 @@ export default function MatchPage() {
       setResult(data as MatchResponse);
       setStatus("success");
       sessionStorage.setItem("projectmatch:result", JSON.stringify(data));
+      sessionStorage.setItem("projectmatch:lastProjectName", projectName);
       sessionStorage.setItem("projectmatch:lastDescription", description);
     } catch {
       const elapsed = Date.now() - started;
@@ -79,14 +88,16 @@ export default function MatchPage() {
     setStatus("idle");
     setResult(null);
     setError(null);
+    setLastProjectName("");
     setLastDescription("");
     sessionStorage.removeItem("projectmatch:result");
+    sessionStorage.removeItem("projectmatch:lastProjectName");
     sessionStorage.removeItem("projectmatch:lastDescription");
   }
 
   function handleRetry() {
     if (lastDescription) {
-      handleSubmit(lastDescription);
+      handleSubmit(lastProjectName, lastDescription);
     } else {
       handleReset();
     }

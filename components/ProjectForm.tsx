@@ -22,20 +22,23 @@ export default function ProjectForm({
   onSubmit,
   disabled,
 }: {
-  onSubmit: (description: string) => void;
+  onSubmit: (projectName: string, description: string) => void;
   disabled?: boolean;
 }) {
+  const [projectName, setProjectName] = useState("");
   const [value, setValue] = useState("");
   const [touched, setTouched] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const nameTooShort = touched && projectName.trim().length > 0 && projectName.trim().length < 2;
+  const nameMissing = touched && projectName.trim().length === 0;
   const tooShort = value.trim().length > 0 && value.trim().length < 20;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (value.trim().length < 20) return;
-    onSubmit(value.trim());
+    if (projectName.trim().length < 2 || value.trim().length < 20) return;
+    onSubmit(projectName.trim(), value.trim());
   }
 
   function applyExample(text: string) {
@@ -66,6 +69,22 @@ export default function ProjectForm({
           </button>
         ))}
       </div>
+
+      <label htmlFor="project-name" className="mb-1.5 block text-xs font-medium text-muted">
+        Project name
+      </label>
+      <input
+        id="project-name"
+        value={projectName}
+        onChange={(e) => setProjectName(e.target.value)}
+        onBlur={() => setTouched(true)}
+        disabled={disabled}
+        placeholder="CropWatch"
+        className="focus-ring mb-3 w-full rounded-xl border border-border bg-surface px-5 py-3 text-base text-ink placeholder:text-muted/60 shadow-xl shadow-black/[0.04] transition-colors focus:border-accent disabled:opacity-50"
+      />
+      {(nameTooShort || nameMissing) && (
+        <p className="-mt-2 mb-3 px-1 text-xs text-red-600">Give your project a name.</p>
+      )}
 
       <label htmlFor="description" className="sr-only">
         Project description

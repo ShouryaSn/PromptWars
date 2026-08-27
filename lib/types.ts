@@ -15,6 +15,8 @@ export type TeamMember = {
 };
 
 export type MatchResponse = {
+  /** Set by the API from the request body, not by the matcher itself — always present in what the client receives. */
+  projectName?: string;
   requiredRoles: string[];
   requiredSkills: string[];
   projectSummary: string;

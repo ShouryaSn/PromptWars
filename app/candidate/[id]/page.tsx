@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { candidates } from "@/lib/candidates";
+import { candidates, Candidate } from "@/lib/candidates";
+import { createClient } from "@/lib/supabase/client";
+import { developerToCandidate, DeveloperProfileRow } from "@/lib/developer";
+import RequestModal from "@/components/RequestModal";
 
 function initials(name: string) {
   return name
@@ -15,11 +18,53 @@ function initials(name: string) {
 }
 
 export default function CandidateProfilePage({ params }: { params: { id: string } }) {
-  const candidate = candidates.find((c) => c.id === params.id);
+  const mockCandidate = candidates.find((c) => c.id === params.id);
+  const [realCandidate, setRealCandidate] = useState<Candidate | null>(null);
+  const [lookupDone, setLookupDone] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mockCandidate) return;
+
+    let cancelled = false;
+    const supabase = createClient();
+
+    supabase
+      .from("developer_profiles")
+      .select("*, profiles(full_name)")
+      .eq("id", params.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled) return;
+        const row = data as (DeveloperProfileRow & { profiles: { full_name: string | null } | null }) | null;
+        if (row) {
+          setRealCandidate(developerToCandidate(row.profiles?.full_name || "Developer", row));
+        }
+        setLookupDone(true);
+      });
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (!cancelled) setCurrentUserId(data.user?.id ?? null);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [mockCandidate, params.id]);
+
+  const candidate = mockCandidate ?? realCandidate;
 
   if (!candidate) {
+    if (!lookupDone) {
+      return (
+        <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-16">
+          <p className="text-sm text-muted">Loading profile…</p>
+        </main>
+      );
+    }
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-16">
         <p className="text-lg font-semibold text-ink">Candidate not found.</p>
@@ -134,7 +179,9 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
             <div className="col-span-2 space-y-4 border-t border-border p-6 sm:border-l sm:border-t-0 sm:p-8">
               <h2 className="text-sm font-semibold text-ink">Contact information</h2>
               <p className="text-xs text-muted/80">
-                Mock profile — these details are placeholders for demo purposes only.
+                {mockCandidate
+                  ? "Mock profile — these details are placeholders for demo purposes only."
+                  : "Real developer profile."}
               </p>
 
               <dl className="space-y-3 text-sm">
@@ -150,18 +197,22 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
                     </button>
                   </dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted">Phone</dt>
-                  <dd className="text-ink">{candidate.phone}</dd>
-                </div>
+                {candidate.phone && (
+                  <div>
+                    <dt className="text-xs text-muted">Phone</dt>
+                    <dd className="text-ink">{candidate.phone}</dd>
+                  </div>
+                )}
                 <div>
                   <dt className="text-xs text-muted">Location</dt>
                   <dd className="text-ink">{candidate.location}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted">LinkedIn</dt>
-                  <dd className="text-ink">@{candidate.linkedinHandle}</dd>
-                </div>
+                {candidate.linkedinHandle && (
+                  <div>
+                    <dt className="text-xs text-muted">LinkedIn</dt>
+                    <dd className="text-ink">@{candidate.linkedinHandle}</dd>
+                  </div>
+                )}
                 {candidate.githubHandle && (
                   <div>
                     <dt className="text-xs text-muted">GitHub</dt>
@@ -170,18 +221,39 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
                 )}
               </dl>
 
-              <motion.button
-                whileHover={{ scale: 1.015 }}
-                whileTap={{ scale: 0.985 }}
-                onClick={copyEmail}
-                className="focus-ring mt-2 w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-dark"
-              >
-                Contact {candidate.name.split(" ")[0]}
-              </motion.button>
+              {mockCandidate ? (
+                <motion.button
+                  whileHover={{ scale: 1.015 }}
+                  whileTap={{ scale: 0.985 }}
+                  onClick={copyEmail}
+                  className="focus-ring mt-2 w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-dark"
+                >
+                  Contact {candidate.name.split(" ")[0]}
+                </motion.button>
+              ) : currentUserId === candidate.id ? (
+                <p className="mt-2 text-center text-xs text-muted">This is your own developer profile.</p>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.015 }}
+                  whileTap={{ scale: 0.985 }}
+                  onClick={() => setRequestOpen(true)}
+                  className="focus-ring mt-2 w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-dark"
+                >
+                  Send a Request
+                </motion.button>
+              )}
             </div>
           </div>
         </motion.div>
       </div>
+
+      {requestOpen && !mockCandidate && (
+        <RequestModal
+          developerId={candidate.id}
+          developerName={candidate.name}
+          onClose={() => setRequestOpen(false)}
+        />
+      )}
     </main>
   );
 }

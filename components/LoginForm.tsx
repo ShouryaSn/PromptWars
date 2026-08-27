@@ -1,54 +1,123 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
+import { GoogleIcon, GitHubIcon } from "@/components/icons/ProviderIcons";
+import type { Provider } from "@supabase/supabase-js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Mode = "signup" | "login";
 
-function nameFromEmail(email: string): string {
-  const local = email.split("@")[0] ?? "";
-  const words = local
-    .replace(/[._-]+/g, " ")
-    .split(" ")
-    .filter(Boolean)
-    .map((w) => w[0].toUpperCase() + w.slice(1));
-  return words.join(" ") || "there";
-}
+const OAUTH_PROVIDERS: { id: Provider; label: string; icon: () => React.JSX.Element }[] = [
+  { id: "google", label: "Google", icon: GoogleIcon },
+  { id: "github", label: "GitHub", icon: GitHubIcon },
+];
 
 export default function LoginForm() {
-  const router = useRouter();
+  const supabase = createClient();
   const [mode, setMode] = useState<Mode>("signup");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [oauthPending, setOauthPending] = useState<Provider | null>(null);
+
+  // If Supabase's OAuth redirect doesn't land on /auth/callback (e.g. that URL
+  // isn't in the project's Redirect URLs allowlist), it falls back to landing
+  // here with a bare "?code=" and the browser SDK exchanges it client-side.
+  // The server already rendered this logged-out form before that exchange
+  // finished, so once a session lands we force a real navigation to "/" —
+  // middleware then sees the now-set cookie and routes correctly.
+  useEffect(() => {
+    if (!window.location.search.includes("code=")) return;
+
+    let redirected = false;
+    const redirectHome = () => {
+      if (redirected) return;
+      redirected = true;
+      window.location.href = "/";
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") redirectHome();
+    });
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) redirectHome();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   function switchMode(next: Mode) {
     setMode(next);
     setError(null);
+    setInfo(null);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleOAuth(provider: Provider) {
+    setError(null);
+    setInfo(null);
+    setOauthPending(provider);
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (oauthError) {
+      setError(oauthError.message);
+      setOauthPending(null);
+    }
+    // On success the browser is redirected away, so no further state change here.
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
+    setInfo(null);
 
     if (mode === "signup") {
       const trimmedName = name.trim();
+      const trimmedEmail = email.trim();
       if (trimmedName.length < 2) {
         setError("Enter your name to continue.");
         return;
       }
-      if (email.trim().length > 0 && !EMAIL_RE.test(email.trim())) {
+      if (!EMAIL_RE.test(trimmedEmail)) {
         setError("That email doesn't look right.");
         return;
       }
-      setError(null);
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters.");
+        return;
+      }
+
       setSubmitting(true);
-      sessionStorage.setItem("projectmatch:name", trimmedName);
-      router.push("/match");
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: trimmedEmail,
+        password,
+        options: {
+          data: { full_name: trimmedName },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      setSubmitting(false);
+
+      if (signUpError) {
+        setError(signUpError.message);
+        return;
+      }
+      if (!data.session) {
+        // Email confirmation is required before a session is issued.
+        setInfo("Check your email to confirm your account, then log in.");
+        return;
+      }
+      window.location.href = "/";
       return;
     }
 
@@ -62,10 +131,19 @@ export default function LoginForm() {
       setError("Enter your password.");
       return;
     }
-    setError(null);
+
     setSubmitting(true);
-    sessionStorage.setItem("projectmatch:name", nameFromEmail(trimmedEmail));
-    router.push("/match");
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: trimmedEmail,
+      password,
+    });
+    setSubmitting(false);
+
+    if (signInError) {
+      setError(signInError.message);
+      return;
+    }
+    window.location.href = "/";
   }
 
   return (
@@ -104,9 +182,30 @@ export default function LoginForm() {
         </h2>
         <p className="text-sm text-muted">
           {mode === "signup"
-            ? "Just a name so your session feels like yours."
+            ? "Tell us who you are and we'll take it from there."
             : "Log in to pick up where you left off."}
         </p>
+      </div>
+
+      <div className="mb-5 space-y-2">
+        {OAUTH_PROVIDERS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            disabled={oauthPending !== null}
+            onClick={() => handleOAuth(id)}
+            className="focus-ring flex w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-accent-light/40 disabled:opacity-60"
+          >
+            <Icon />
+            {oauthPending === id ? "Redirecting…" : `Continue with ${label}`}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-5 flex items-center gap-3">
+        <span className="h-px flex-1 bg-border" />
+        <span className="text-xs text-muted">or use email</span>
+        <span className="h-px flex-1 bg-border" />
       </div>
 
       {mode === "signup" ? (
@@ -126,7 +225,7 @@ export default function LoginForm() {
           </div>
           <div>
             <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-muted">
-              Email <span className="text-muted/60">(optional)</span>
+              Email
             </label>
             <input
               id="email"
@@ -134,6 +233,19 @@ export default function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ada@example.com"
+              className="focus-ring w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 transition-colors focus:border-accent"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="mb-1.5 block text-xs font-medium text-muted">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="At least 6 characters"
               className="focus-ring w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-ink placeholder:text-muted/60 transition-colors focus:border-accent"
             />
           </div>
@@ -180,14 +292,24 @@ export default function LoginForm() {
         </motion.p>
       )}
 
+      {info && (
+        <motion.p
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 text-sm text-accent-dark"
+        >
+          {info}
+        </motion.p>
+      )}
+
       <motion.button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || oauthPending !== null}
         whileHover={{ scale: 1.015 }}
         whileTap={{ scale: 0.985 }}
         className="focus-ring mt-5 w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
       >
-        {submitting ? "Entering…" : mode === "signup" ? "Sign up" : "Log in"}
+        {submitting ? "Please wait…" : mode === "signup" ? "Sign up" : "Log in"}
       </motion.button>
 
       <p className="mt-4 text-center text-xs text-muted">
@@ -206,10 +328,6 @@ export default function LoginForm() {
             </button>
           </>
         )}
-      </p>
-
-      <p className="mt-3 text-center text-[11px] text-muted/70">
-        Demo mode — no account is created or verified, nothing leaves your session.
       </p>
     </motion.form>
   );
