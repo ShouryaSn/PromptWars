@@ -29,6 +29,7 @@ export default function RequestModal({
   const [paymentMode, setPaymentMode] = useState<string>("");
   const [paymentTiming, setPaymentTiming] = useState<string>("");
   const [deadline, setDeadline] = useState("");
+  const todayIso = new Date().toISOString().slice(0, 10);
   const [workType, setWorkType] = useState<string>("");
 
   const [touched, setTouched] = useState(false);
@@ -242,6 +243,7 @@ export default function RequestModal({
                     <input
                       id="req-deadline"
                       type="date"
+                      min={todayIso}
                       value={deadline}
                       onChange={(e) => setDeadline(e.target.value)}
                       className="focus-ring w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-ink transition-colors focus:border-accent"

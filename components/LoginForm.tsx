@@ -149,6 +149,7 @@ export default function LoginForm() {
   return (
     <motion.form
       onSubmit={handleSubmit}
+      noValidate
       className="w-full max-w-sm rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-black/[0.04]"
       initial={{ opacity: 0, y: 16, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}

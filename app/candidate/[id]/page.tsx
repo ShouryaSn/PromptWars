@@ -7,6 +7,7 @@ import { candidates, Candidate } from "@/lib/candidates";
 import { createClient } from "@/lib/supabase/client";
 import { developerToCandidate, DeveloperProfileRow } from "@/lib/developer";
 import RequestModal from "@/components/RequestModal";
+import LoadingState from "@/components/LoadingState";
 
 function initials(name: string) {
   return name
@@ -61,7 +62,7 @@ export default function CandidateProfilePage({ params }: { params: { id: string 
     if (!lookupDone) {
       return (
         <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-16">
-          <p className="text-sm text-muted">Loading profile…</p>
+          <LoadingState label="Loading profile…" />
         </main>
       );
     }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Spinner from "@/components/Spinner";
 
 const STEPS = [
   "Parsing your requirements…",
@@ -23,15 +24,8 @@ export default function LoadingSequence() {
 
   return (
     <div className="flex w-full max-w-md flex-col items-center py-16 text-center" role="status" aria-live="polite">
-      <div className="relative mb-8 h-16 w-16">
-        <motion.div
-          className="absolute inset-0 rounded-full border-2 border-accent/20"
-        />
-        <motion.div
-          className="absolute inset-0 rounded-full border-2 border-t-accent border-r-accent/40 border-b-transparent border-l-transparent"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
-        />
+      <div className="mb-8">
+        <Spinner size="h-16 w-16" />
       </div>
 
       <div className="h-6 overflow-hidden">

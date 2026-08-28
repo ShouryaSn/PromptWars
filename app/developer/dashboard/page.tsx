@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import type { DeveloperProfileRow, MatchImpressionRow } from "@/lib/developer";
+import LoadingState from "@/components/LoadingState";
 
 type LoadState = "loading" | "ready" | "error";
 
@@ -126,7 +127,7 @@ export default function DeveloperDashboardPage() {
   if (state === "loading") {
     return (
       <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-6">
-        <p className="text-sm text-muted">Loading your dashboard…</p>
+        <LoadingState label="Loading your dashboard…" />
       </main>
     );
   }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { RequestRow, RequestStatus, STATUS_LABEL } from "@/lib/requests";
+import LoadingState from "@/components/LoadingState";
 
 type InboxRow = RequestRow & { profiles: { full_name: string | null } | null };
 
@@ -90,7 +91,7 @@ export default function RequestInboxPage() {
           <p className="mt-3 max-w-md text-balance text-muted">Requests seekers have sent you.</p>
         </motion.div>
 
-        {state === "loading" && <p className="text-center text-sm text-muted">Loading…</p>}
+        {state === "loading" && <LoadingState />}
         {state === "error" && <p className="text-center text-sm text-red-600">{error}</p>}
 
         {state === "ready" && rows.length === 0 && (
